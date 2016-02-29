@@ -1,11 +1,15 @@
 GEM
   specs:
+    foreman (0.78.0)
+      thor (~> 0.19.1)
     nexmo (3.1.0)
+    thor (0.19.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  foreman
   nexmo
 
 BUNDLED WITH

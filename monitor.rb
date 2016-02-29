@@ -2,9 +2,11 @@
 
 require 'nexmo'
 
-THRESHOLD = 95.00
-SENDER = "Your Server"
+THRESHOLD = ENV["THRESHOLD"].to_f
+SENDER = ENV["SENDER"]
 MESSAGE_NUMBER = ENV["MESSAGE_NUMBER"]
+NEXMO_KEY = ENV["NEXMO_KEY"]
+NEXMO_SECRET = ENV["NEXMO_SECRET"]
 
 def get_disk_usage
 	df = `df --total`  
@@ -45,24 +47,27 @@ def get_cpu_usage
 end
 
 def check
-	disk = get_disk_usage
-	mem = get_memory_usage
-	cpu = get_cpu_usage
-	if disk > THRESHOLD
-		send("You disk usage is now #{disk}. Please do something about it.")
-	end
-	if mem > THRESHOLD
-		send("You memory usage is now #{mem}. Please do something about it.")
-	end
-	if cpu > THRESHOLD
-		send("You cpu usage is now #{cpu}. Please do something about it.")
+	while true
+		disk = get_disk_usage
+		mem = get_memory_usage
+		cpu = get_cpu_usage
+		if disk > THRESHOLD
+			send("You disk usage is now #{disk}. Please do something about it.")
+		end
+		if mem > THRESHOLD
+			send("You memory usage is now #{mem}. Please do something about it.")
+		end
+		if cpu > THRESHOLD
+			send("You cpu usage is now #{cpu}. Please do something about it.")
+		end
 	end
 end
 
 def send(message)
-	nexmo.send_message(from: SENDER, to: MESSAGE_NUMBER, text: message)
+	puts message
+	@nexmo.send_message(from: SENDER, to: MESSAGE_NUMBER, text: message)
 	sleep 3600
 end
 
-nexmo = Nexmo::Client.new(key: ENV["NEXMO_KEY"], secret: ENV["NEXMO_SECRET"])
+@nexmo = Nexmo::Client.new(key: NEXMO_KEY, secret: NEXMO_SECRET)
 check
