@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 
 require 'nexmo'
+require "net/http"
+require "uri"
 
 THRESHOLD = ENV["THRESHOLD"].to_f
-SENDER = ENV["SENDER"]
+SENDER = ENV["SENDER_NAME"]
 MESSAGE_NUMBER = ENV["MESSAGE_NUMBER"]
-NEXMO_KEY = ENV["NEXMO_KEY"]
-NEXMO_SECRET = ENV["NEXMO_SECRET"]
+NEXMO_KEY = ENV["NEXMO_API_KEY"]
+NEXMO_SECRET = ENV["NEXMO_API_SECRET"]
+
+# puts THRESHOLD
+# puts SENDER
+# puts MESSAGE_NUMBER
+# puts NEXMO_KEY
+# puts NEXMO_SECRET
 
 def get_disk_usage
 	df = `df --total`  
@@ -65,9 +73,29 @@ end
 
 def send(message)
 	puts message
-	@nexmo.send_message(from: SENDER, to: MESSAGE_NUMBER, text: message)
-	sleep 3600
+	# call = @nexmo.send_message(from: SENDER, to: MESSAGE_NUMBER, text: message)
+	# TODO: Use raw request until I can figure out what I am doing wrong in the line above.
+	uri = URI.parse("https://rest.nexmo.com/sms/json")
+	params = {
+	    "api_key" => NEXMO_KEY,
+	    "api_secret" => NEXMO_SECRET,
+	    "to" => MESSAGE_NUMBER,
+	    "from" => SENDER,
+	    "text" => message
+	}
+
+	call = Net::HTTP.post_form(uri, params)
+	# puts call
+	puts call.body
+	# sleep 3600
+
+	# hacky way since sleep is not working with net/http
+	count = 1
+	while count%100000000000==0
+		count += 1
+	end
 end
 
-@nexmo = Nexmo::Client.new(key: NEXMO_KEY, secret: NEXMO_SECRET)
+# @nexmo = Nexmo::Client.new
+puts "Start"
 check
