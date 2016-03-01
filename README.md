@@ -4,17 +4,17 @@ Uses a simple ruby script to montior and send an alert sms whenever the usage a 
 
 ## Requirements
 
-Ruby (Built on 2.2.3)
-Nexmo gem
-Foreman gem
+- Ruby (Built on 2.2.3)
+- Nexmo gem
+- Foreman gem
 
 ## Installation
 
-Install ruby
-Install bundler
-run `bundle install`
-copy `.env.example` to `.env`
-add your details in `.env`
+- Install ruby
+- Install bundler
+- run `bundle install`
+- copy `.env.example` to `.env`
+- add your details in `.env`
 
 ## Running 
 
