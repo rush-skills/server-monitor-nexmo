@@ -91,7 +91,7 @@ def send(message)
 
 	# hacky way since sleep is not working with net/http
 	count = 1
-	while count%100000000000==0
+	unless count%100000000000==0
 		count += 1
 	end
 end
